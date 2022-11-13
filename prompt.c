@@ -1,27 +1,27 @@
 #include "shell.h"
+
 /**
- *ctrl_c - ignore Ctrl-C input and prints prompt again
- *@n: takes in int from signal
+ * ctrl_c - ignore Ctrl-C input and prints prompt again
+ * @n: takes in int from signal
  */
-
 void ctrl_c(int n)
-
 {
 	(void)n;
 	write(STDOUT_FILENO, "\n$ ", 3);
 }
+
 /**
- *built_in - handles builtins (exit, env, cd)
- *@token: user's typed command
- *@env: environmental variable
- *@num: take in nth user command typed to write error message
- *@command: bring in command to free
- *Return: 1 if acted on builtin, 0 if not
+ * built_in - handles builtins (exit, env, cd)
+ * @token: user's typed command
+ * @env: environmental variable
+ * @num: take in nth user command typed to write error message
+ * @command: bring in command to free
+ * Return: 1 if acted on builtin, 0 if not
  */
 int built_in(char **token, list_t *env, int num, char **command)
-
 {
 	int i = 0;
+
 	/* if user types "exit", free cmd tokens, and exit */
 	if (_strcmp(token[0], "exit") == 0)
 	{
@@ -52,18 +52,19 @@ int built_in(char **token, list_t *env, int num, char **command)
 	}
 	return (i);
 }
+
 /**
  * ignore_space - return string without spaces in front
  * @str: string
  * Return: new string
  */
 char *ignore_space(char *str)
-
 {
 	while (*str == ' ')
 		str++;
 	return (str);
 }
+
 /**
  * ctrl_D - exits program if Ctrl-D was pressed
  * @i: characters read via get_line
@@ -71,7 +72,6 @@ char *ignore_space(char *str)
  * @env: environmental variable linked list
  */
 void ctrl_D(int i, char *command, list_t *env)
-
 {
 	if (i == 0) /* handles Ctrl+D */
 	{
@@ -82,13 +82,13 @@ void ctrl_D(int i, char *command, list_t *env)
 		exit(0);
 	}
 }
+
 /**
  * prompt - repeatedly prompts user and executes user's cmds if applicable
  * @en: envrionmental variables
  * Return: 0 on success
  */
 int prompt(char **en)
-
 {
 	list_t *env;
 	size_t i = 0, n = 0;
@@ -122,7 +122,6 @@ int prompt(char **en)
 		exit_stat = built_in(token, env, command_line_no, NULL);
 		if (exit_stat)
 			continue;
-
 		exit_stat = _execve(token, env, command_line_no);
 	} while (1); /* keep on repeating till user exits shell */
 	return (exit_stat);
