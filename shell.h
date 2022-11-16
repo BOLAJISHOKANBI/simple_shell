@@ -1,61 +1,105 @@
-#ifndef SHELL
-#define SHELL
+#ifndef SHELLH
+#define SHELLH
 
-#include <stdlib.h>
+#define _GNU_SOURCE
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <wait.h>
 #include <fcntl.h>
-#include <dirent.h>
-#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include "history.h"
+#include "shellvars.h"
+/*#include <string.h>*/
 
-/**
- * struct list - linked list for environmental variables
- * @var: holds environmental variable string
- * @next: points to next node
- */
-typedef struct list
-{
-	char *var;
-	struct list *next;
-} list_t;
+/* from in.c */
+int shintmode(void);
 
-/* function prototypes */
-int prompt(char **env);
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
-size_t get_line(char **str);
-int t_strlen(char *str, int pos, char delm);
-char *ignore_space(char *str);
-char **_str_tok(char *str, char *delm);
-char **c_str_tok(char *str, char *delm);
-char *_strcat(char *dest, char *src);
-char *_strdup(char *str);
+/* from _printenv.c */
+int _printenv(void);
+
+/* from cmdcall.c */
+int builtincall(char *av[]);
+int cmdcall(char *av[], char *path);
+
+/* from parser.c */
+int parseargs(char **buf);
+
+/* from errhandl.c */
+int errhandl(int status);
+
+/* from string.c */
+size_t _strlen(char *str);
 char *_strcpy(char *dest, char *src);
-int _strcmp(char *s1, char *s2);
-int _cd(char **str, list_t *env, int num);
-int built_in(char **token, list_t *env, int num, char **command);
-void non_interactive(list_t *env);
-char *_which(char *str, list_t *env);
-int __exit(char **s, list_t *env, int num, char **command);
-int _execve(char *argv[], list_t *env, int num);
-void free_double_ptr(char **str);
-void free_linked_list(list_t *list);
-int _env(char **str, list_t *env);
-char *get_env(char *str, list_t *env);
-list_t *env_linked_list(char **env);
-list_t *add_end_node(list_t **head, char *str);
-size_t print_list(list_t *h);
-int delete_nodeint_at_index(list_t **head, int index);
-int _unsetenv(list_t **env, char **str);
-int _setenv(list_t **env, char **str);
-int find_env(list_t *env, char *str);
-void not_found(char *str, int num, list_t *env);
-void cant_cd_to(char *str, int c_n, list_t *env);
-void illegal_number(char *str, int c_n, list_t *env);
-char *int_to_string(int num);
+int _strcmp(char *, char *);
+char *_strdup(char *str);
+char *_strcat(char *a, char *b);
+
+/* from _getenv.c and getenviron.c */
+char ***getenviron(void);
+int setallenv(char **environ, char *add);
+char *_getenv(char *avzero);
+int _setenv(char *name, char *val);
+int _unsetenv(char *name);
+char **getallenv(void);
+
+
+/* from utility.c */
+char *itos(int digits);
+char *_strchr(char *s, char c);
+int fprintstrs(int fd, char *str, ...);
+int printerr(char *);
+int linecount(int);
+
+/* from cd.c */
+int _cd(char *av[]);
+
+/* from alias.c */
+int aliascmd(char **av);
+char *getalias(char *name);
+int unsetalias(char *name);
+
+/* from shellvars.c */
+int initsvars(int ac, char **av);
+char *getsvar(char *name);
+int setsvar(char *name, char *val);
+int unsetsvar(char *name);
+ShellVar **getspecial(void);
+ShellVar **getvars(void);
+
+/* from _realloc.c */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+
+/* from _strtok.c */
+char *strtok(char *str, char *delim);
+
+/* from _getline.c */
+int _getline(char **lineptr, int fd);
+
+char *strtokqe(char *str, char *delim, int escflags);
+
+/*from history.c*/
+int sethist(char *cmd);
+int print_hist(void);
+int exit_hist(void);
+
+
+/* from _printenv.c */
+int _printenv(void);
+int _putchar(char c);
+
+
+
+/*from help.c*/
+int help(char *cmd);
+
+/* from exitcleanup.c */
+void exitcleanup(char **av);
+
+/* from _atoi*/
+int _atoi(char *s);
+
+char *_getpid(void);
+
 
 #endif
