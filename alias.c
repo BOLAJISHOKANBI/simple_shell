@@ -1,3 +1,5 @@
+#include "shell.h"
+#include "alias.h"
 /**
  * getalist - static wrapper getalias list
  * Return: address alist
